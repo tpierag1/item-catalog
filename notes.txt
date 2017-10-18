@@ -1,8 +1,0 @@
-Start with backend
-
-
-JSON api
-Style
-login/logout functionality and button on pages and redirect to home after login
-Comments
-Readme
