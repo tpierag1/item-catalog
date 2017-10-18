@@ -1,0 +1,40 @@
+<html>
+
+<head>
+</head>
+<body>
+<div>
+<h1><a href='{{url_for('homepage')}}'>Grocery</a></h1>
+<h2>{{ category.name }}</h2>
+
+{% if items !=[] %}
+
+<h5><a href = '{{url_for('newItem', category_id = category.id )}}'>Create New Item</a></h5>
+
+<h4>Items</h4>
+{% for i in items %}
+
+
+	{{i.name}}<br>
+
+
+	{{i.description}}<br>
+
+
+	{{i.price}}<br>
+
+<a href='{{url_for('editItem', category_id = category.id, item_id=i.id ) }}' >Edit</a>
+<br>
+<a href='{{url_for('deleteItem', category_id = category.id, item_id=i.id ) }}' >Delete</a>
+<br><br><br>
+
+{% else %}
+<p> You currently have no menu items. <p>
+<a href = "{{url_for('newMenuItem', restaurant_id = restaurant.id )}}">Create New Item</a>
+{% endfor %}
+{% endif %}
+
+</div>
+</body>
+
+</html>

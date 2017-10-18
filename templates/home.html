@@ -1,0 +1,23 @@
+<html>
+
+<head>
+</head>
+
+
+<body>
+<div>
+<h1>Grocery</h1>
+<p>
+    <h3>Check Out Our Selection</h3>
+</p><br>
+
+{% for category in categories %}
+
+<a href = "{{url_for('showCategory', category_id = category.id)}}"> <p>{{category.name}}</p></a>
+
+{% endfor %}
+
+</div>
+</body>
+
+</html>
