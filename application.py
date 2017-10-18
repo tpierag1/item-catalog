@@ -57,7 +57,7 @@ def getUserID(email):
 
 @app.route('/login')
 def login():
-	# Create anti-forgery state token
+	# create anti-forgery state token
 	state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
 	login_session['state'] = state
 
@@ -170,7 +170,7 @@ def gdisconnect():
 	result = h.request(url, 'GET')[0]
 
 	if result['status'] != '200':
-	    # FIn case token was invalid, for some reason
+	    # In case token was invalid, for some reason
 	    response = make_response(json.dumps('Failed to revoke token for given user.'), 400)
         response.headers['Content-Type'] = 'application/json'
 
@@ -204,8 +204,8 @@ def showCategoryItem(catalog_id, item_id):
 @app.route('/category/<int:category_id>/item/add', methods=['GET', 'POST'])
 def newItem(category_id):
     #check for login
-    if 'username' not in login_session:
-        return redirect('/login')
+    #if 'username' not in login_session:
+    #    return redirect('/login')
 
     if request.method == 'POST':
         newItem = Item(name=request.form['name'], description=request.form[
@@ -225,15 +225,15 @@ def newItem(category_id):
            methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
     #see if user logged in
-    if 'username' not in login_session:
-        return redirect('/login')
+    #if 'username' not in login_session:
+    #    return redirect('/login')
 
     itemToDelete = session.query(Item).filter_by(id=item_id).one()
-    user = getUserInfo(Item.user_id)
+    #user = getUserInfo(Item.user_id)
 
 	# Check if logged in user is creator of item
-    if user.id != login_session['user_id']:
-        return redirect('/login')
+    #if user.id != login_session['user_id']:
+    #    return redirect('/login')
 
     if request.method == 'POST':
         session.delete(itemToDelete)
@@ -247,15 +247,15 @@ def deleteItem(category_id, item_id):
            methods=['GET', 'POST'])
 def editItem(category_id, item_id):
     #see if user logged in
-    if 'username' not in login_session:
-        return redirect('/login')
+    #if 'username' not in login_session:
+    #    return redirect('/login')
 
     editedItem = session.query(Item).filter_by(id=item_id).one()
-    user = getUserInfo(Item.user_id)
+    #user = getUserInfo(Item.user_id)
 
 	# Check if logged in user is creator of item
-    if user.id != login_session['user_id']:
-        return redirect('/login')
+    #if user.id != login_session['user_id']:
+    #    return redirect('/login')
 
     if request.method == 'POST':
         if request.form['name']:
