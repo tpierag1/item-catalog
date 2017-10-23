@@ -189,18 +189,6 @@ def showCategory(category_id):
         category_id=category_id).all()
     return render_template('category.html', items=items, category=category)
 
-@app.route('/catalog/<int:category_id>/items/<int:item_id>')
-def showCategoryItem(catalog_id, item_id):
-	# Get category item
-	categoryItem = session.query(Item).filter_by(id = item_id).first()
-
-	# Get id of user that created item
-	user = getUserInfo(Item.user_id)
-
-	return render_template('categoryItem.html', categoryItem = categoryItem, user = user)
-
-
-
 @app.route('/category/<int:category_id>/item/add', methods=['GET', 'POST'])
 def newItem(category_id):
     #check for login
@@ -270,7 +258,8 @@ def editItem(category_id, item_id):
     else:
 
         return render_template(
-            'updateItem.html', category_id=category_id, item_id=item_id, item=editedItem)
+            'updateItem.html', category_id=category_id, item_id=item_id,
+            item=editedItem)
 
 
 if __name__ == '__main__':

@@ -1,40 +1,72 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Add Item to Catalog</title>
 
-<head>
+    <!-- Bootstrap -->
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}" rel="stylesheet">
 </head>
 <body>
-<div>
-<h1><a href='{{url_for('homepage')}}'>Grocery</a></h1>
-<h2>{{ category.name }}</h2>
+	<nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Super Ultra Mega Groceries</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active">
+				<a href="{{ url_for('homepage') }}">
+					Home
+				</a>
+			</li>
+		</div>
+	</nav>
 
-{% if items !=[] %}
+	<div class="container theme-showcase" role="main">
+		<div class="jumbotron">
+		  <h1 style="text-align:center;">
+		  	{{ category.name }}
+	  	  </h1>
+	  </div>
+		  {% if items !=[] %}
+		  <p style="text-align:right">
+              <a href="{{ url_for('newItem', category_id=category.id) }}">
+                  <button type="button" class="btn btn-success">
+                      New Item
+                  </button>
+              </a>
+          </p>
+		{% for i in items %}
+		<div class="page-header">
+        	<h4>{{i.name}}</h4>
+      	</div>
+		{{i.description}}<br>
+		{{i.price}}<br>
+		<a href='{{url_for('editItem', category_id = category.id, item_id=i.id ) }}' >
+			<button type="button" class="btn btn-sm btn-primary">
+				Edit
+			</button>
+		</a>
+		<a href='{{url_for('deleteItem', category_id = category.id, item_id=i.id ) }}' >
+			<button type="button" class="btn btn-sm btn-danger">
+				Delete
+			</button>
+		</a>
+		<br><br><br>
 
-<h5><a href = '{{url_for('newItem', category_id = category.id )}}'>Create New Item</a></h5>
+		{% else %}
+		<p> You currently have no menu items. </p>
+		<a href = "{{url_for('newMenuItem', restaurant_id = restaurant.id )}}">
+			Create New Item
+		</a>
+		{% endfor %}
+		{% endif %}
 
-<h4>Items</h4>
-{% for i in items %}
-
-
-	{{i.name}}<br>
-
-
-	{{i.description}}<br>
-
-
-	{{i.price}}<br>
-
-<a href='{{url_for('editItem', category_id = category.id, item_id=i.id ) }}' >Edit</a>
-<br>
-<a href='{{url_for('deleteItem', category_id = category.id, item_id=i.id ) }}' >Delete</a>
-<br><br><br>
-
-{% else %}
-<p> You currently have no menu items. <p>
-<a href = "{{url_for('newMenuItem', restaurant_id = restaurant.id )}}">Create New Item</a>
-{% endfor %}
-{% endif %}
-
-</div>
+	</div>
 </body>
-
 </html>
