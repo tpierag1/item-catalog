@@ -55,6 +55,8 @@ def getUserID(email):
     except:
         return None
 
+    #auth code
+
 @app.route('/login')
 def login():
 	# create anti-forgery state token
@@ -76,6 +78,7 @@ def logout():
         del login_session['provider']
         return redirect(url_for('homepage'))
 
+#login Oauth Call function
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
 	# Validate anti-forgery state token
@@ -174,14 +177,14 @@ def gdisconnect():
 	    response = make_response(json.dumps('Failed to revoke token for given user.'), 400)
         response.headers['Content-Type'] = 'application/json'
 
-
+#homepage
 @app.route('/')
 def homepage():
     categories = session.query(Category).all()
 
     return render_template('home.html', categories = categories)
 
-
+#show Category
 @app.route('/category/<int:category_id>')
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
@@ -189,6 +192,49 @@ def showCategory(category_id):
         category_id=category_id).all()
     return render_template('category.html', items=items, category=category)
 
+#create Category
+@app.route('/category/create', methods=['GET', 'POST'])
+def createCategory():
+    #check for login
+    if request.method == 'POST':
+        newCategory = Category(name=request.form['name'])
+        session.add(newCategory)
+        session.commit()
+        return redirect(url_for('homepage'))
+    else:
+        return render_template('newCategory.html')
+
+#edit Category
+@app.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
+def editCategory(category_id):
+    #check for login
+    editedCategory = session.query(
+        Category).filter_by(id=category_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedCategory.name = request.form['name']
+            return redirect(url_for('homepage'))
+    else:
+        return render_template(
+            'editCategory.html', category=editedCategory)
+
+#delete Category
+@app.route('/category/<int:category_id>/delete', methods=['GET','POST'])
+def deleteCategory(category_id):
+    #check for login
+    deletedCategory = session.query(
+        Category).filter_by(id=category_id).one()
+    if request.method == 'POST':
+        session.delete(deletedCategory)
+        session.commit()
+        return redirect(
+            url_for('homepage'))
+    else:
+        return render_template(
+            'deleteCategory.html', category=deletedCategory)
+
+
+#add Item
 @app.route('/category/<int:category_id>/item/add', methods=['GET', 'POST'])
 def newItem(category_id):
     #check for login
@@ -208,7 +254,7 @@ def newItem(category_id):
 
     return render_template('addItem.html', category=category)
 
-
+#delete Item
 @app.route('/category/<int:category_id>/item/<int:item_id>/delete',
            methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
@@ -230,7 +276,7 @@ def deleteItem(category_id, item_id):
     else:
         return render_template('deleteItem.html', item=itemToDelete)
 
-
+#edit Item
 @app.route('/category/<int:category_id>/item/<int:item_id>/edit',
            methods=['GET', 'POST'])
 def editItem(category_id, item_id):
@@ -260,6 +306,19 @@ def editItem(category_id, item_id):
         return render_template(
             'updateItem.html', category_id=category_id, item_id=item_id,
             item=editedItem)
+
+#API Calls
+@app.route('/category/<int:category_id>/JSON')
+def categoryItemsJSON(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    items = session.query(Item).filter_by(
+        category_id=category_id).all()
+    return jsonify(Items=[i.serialize for i in items])
+
+@app.route('/category/JSON')
+def restaurantsJSON():
+    categories = session.query(Category).all()
+    return jsonify(categories=[r.serialize for r in categories])
 
 
 if __name__ == '__main__':
