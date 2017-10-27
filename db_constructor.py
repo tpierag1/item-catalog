@@ -30,9 +30,9 @@ session.commit()
 
 user2 = User(name='Me',
              email='tpierag1@gmail.com',
-             picture='http://i0.kym-cdn.com/entries/icons/original/000/021/807/4d7.png')
+             picture='http://i0.kym-cdn.com/entries/icons/original/000/021/807/4d7.png')  # noqa
 
-#Add categories
+# Add categories
 meat = Category(id=1, name='Meat')
 session.add(meat)
 session.commit()
@@ -53,8 +53,8 @@ other = Category(id=5, name='Other')
 session.add(other)
 session.commit()
 
-#add items
-#meat
+# add items
+# meat
 steak = Item(name='Steak',
              description='Tasty Meaty Treats',
              price='7.99',
@@ -78,7 +78,7 @@ pork = Item(name='Pork',
             user_id=1)
 session.add(pork)
 session.commit()
-#veggies
+# veggies
 carrots = Item(name='Carrots',
                description='Good for your eyes',
                price='2.99',
@@ -102,7 +102,7 @@ kale = Item(name='Kale',
             user_id=1)
 session.add(kale)
 session.commit()
-#fruit
+# fruit
 apple = Item(name='Apple',
              description='Sweet and crunchy',
              price='0.99',
@@ -126,7 +126,7 @@ cherry = Item(name='Cherry',
               user_id=1)
 session.add(cherry)
 session.commit()
-#grains
+# grains
 oats = Item(name='Oats',
             description='Great in the morning',
             price='1.99',
@@ -150,7 +150,7 @@ rice = Item(name='Rice',
             user_id=1)
 session.add(rice)
 session.commit()
-#other
+# other
 olive_oil = Item(name='Olive Oil',
                  description='Heart-healthy',
                  price='7.99',

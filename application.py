@@ -31,8 +31,8 @@ app = Flask(__name__)
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 
-#Helper Functions
 
+# Helper Functions
 def createUser(login_session):
     newUser = User(name=login_session['username'],
                    email=login_session['email'],
@@ -55,15 +55,17 @@ def getUserID(email):
     except:
         return None
 
-    #auth code
 
+# auth code
 @app.route('/login')
 def login():
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in xrange(32))
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
-#login Oauth Call function
+
+# login Oauth Call function
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     if request.args.get('state') != login_session['state']:
@@ -78,14 +80,16 @@ def gconnect():
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
-        response = make_response(json.dumps('Failed to upgrade the authorization code.'), 401)
+        response = make_response(json.dumps(
+            'Failed to upgrade the authorization code.'), 401)
         print 1
         response.headers['Content-Type'] = 'application/json'
         return response
 
     # Check that the access token is valid.
     access_token = credentials.access_token
-    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' % access_token)
+    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
+           % access_token)
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
 
@@ -98,14 +102,16 @@ def gconnect():
     # Verify that the access token is used for the intended user.
     gplus_id = credentials.id_token['sub']
     if result['user_id'] != gplus_id:
-        response = make_response(json.dumps("Token's user ID doesn't match given user ID."), 401)
+        response = make_response(json.dumps(
+            "Token's user ID doesn't match given user ID."), 401)
         print 2
         response.headers['Content-Type'] = 'application/json'
         return response
 
     # Verify that the access token is valid for this app.
     if result['issued_to'] != CLIENT_ID:
-        response = make_response(json.dumps("Token's client ID does not match app's."), 401)
+        response = make_response(json.dumps(
+            "Token's client ID does not match app's."), 401)
         print 3
         print "Token's client ID does not match app's."
         response.headers['Content-Type'] = 'application/json'
@@ -115,7 +121,8 @@ def gconnect():
     stored_gplus_id = login_session.get('gplus_id')
 
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'), 200)
+        response = make_response(json.dumps(
+            'Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -144,6 +151,7 @@ def gconnect():
     login_session['user_id'] = user_id
     return "Login Successful"
 
+
 @app.route('/logout')
 def logout():
     gdisconnect()
@@ -157,13 +165,15 @@ def logout():
 
     return redirect(url_for('homepage'))
 
+
 @app.route('/gdisconnect')
 def gdisconnect():
     # Only disconnect a connected user.
     access_token = login_session.get('access_token')
 
     if access_token is None:
-        response = make_response(json.dumps('Current user not connected.'), 401)
+        response = make_response(json.dumps(
+            'Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -173,11 +183,13 @@ def gdisconnect():
 
     if result['status'] != '200':
         # For whatever reason, the given token was invalid.
-        response = make_response(json.dumps('Failed to revoke token for given user.'), 400)
+        response = make_response(json.dumps(
+            'Failed to revoke token for given user.'), 400)
         response.headers['Content-Type'] = 'application/json'
         return response
 
-#homepage
+
+# homepage
 @app.route('/')
 def homepage():
     categories = session.query(Category).all()
@@ -185,23 +197,27 @@ def homepage():
         return render_template('publicHome.html', categories=categories)
 
     else:
-        return render_template('home.html', categories = categories)
+        return render_template('home.html', categories=categories)
 
-#show Category
+
+# show Category
 @app.route('/category/<int:category_id>')
 def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Item).filter_by(
         category_id=category_id).all()
     if 'username' not in login_session:
-        return render_template('publicCategory.html', items=items, category=category)
+        return render_template(
+            'publicCategory.html', items=items, category=category)
     else:
-        return render_template('category.html', items=items, category=category)
+        return render_template(
+            'category.html', items=items, category=category)
 
-#create Category
+
+# create Category
 @app.route('/category/create', methods=['GET', 'POST'])
 def createCategory():
-    #check for login
+    # check for login
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -213,10 +229,11 @@ def createCategory():
     else:
         return render_template('newCategory.html')
 
-#edit Category
+
+# edit Category
 @app.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
 def editCategory(category_id):
-    #check for login
+    # check for login
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -230,10 +247,11 @@ def editCategory(category_id):
         return render_template(
             'editCategory.html', category=editedCategory)
 
-#delete Category
-@app.route('/category/<int:category_id>/delete', methods=['GET','POST'])
+
+# delete Category
+@app.route('/category/<int:category_id>/delete', methods=['GET', 'POST'])
 def deleteCategory(category_id):
-    #check for login
+    # check for login
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -249,10 +267,10 @@ def deleteCategory(category_id):
             'deleteCategory.html', category=deletedCategory)
 
 
-#add Item
+# add Item
 @app.route('/category/<int:category_id>/item/add', methods=['GET', 'POST'])
 def newItem(category_id):
-    #check for login
+    # check for login
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -269,11 +287,12 @@ def newItem(category_id):
 
     return render_template('addItem.html', category=category)
 
-#delete Item
+
+# delete Item
 @app.route('/category/<int:category_id>/item/<int:item_id>/delete',
            methods=['GET', 'POST'])
 def deleteItem(category_id, item_id):
-    #see if user logged in
+    # see if user logged in
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -287,11 +306,12 @@ def deleteItem(category_id, item_id):
     else:
         return render_template('deleteItem.html', item=itemToDelete)
 
-#edit Item
+
+# edit Item
 @app.route('/category/<int:category_id>/item/<int:item_id>/edit',
            methods=['GET', 'POST'])
 def editItem(category_id, item_id):
-    #see if user logged in
+    # see if user logged in
     if 'username' not in login_session:
         return redirect('/login')
 
@@ -314,7 +334,8 @@ def editItem(category_id, item_id):
             'updateItem.html', category_id=category_id, item_id=item_id,
             item=editedItem)
 
-#API Calls
+
+# API Calls
 @app.route('/category/<int:category_id>/JSON')
 def categoryItemsJSON(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
@@ -322,8 +343,9 @@ def categoryItemsJSON(category_id):
         category_id=category_id).all()
     return jsonify(Items=[i.serialize for i in items])
 
+
 @app.route('/category/JSON')
-def restaurantsJSON():
+def categoriesJSON():
     categories = session.query(Category).all()
     return jsonify(categories=[r.serialize for r in categories])
 

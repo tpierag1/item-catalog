@@ -10,10 +10,11 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'user'
 
-    id = Column(Integer, primary_key = True)
-    name = Column(String(250), nullable = False)
-    email = Column(String(250), nullable = False)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
     picture = Column(String(250))
+
 
 class Category(Base):
     __tablename__ = 'categories'
@@ -27,6 +28,7 @@ class Category(Base):
             'id': self.id,
         }
 
+
 class Item(Base):
     __tablename__ = 'items'
     id = Column(Integer, primary_key=True)
@@ -37,14 +39,14 @@ class Item(Base):
     category = relationship(Category)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
+
     @property
     def serialize(self):
         return {
-        'name' : self.name,
-        'price' : self.price,
-        'description' : self.description,
-        'category' : self.category,
-            }
+            'name': self.name,
+            'price': self.price,
+            'description': self.description,
+        }
 
 engine = create_engine('sqlite:///catalog.db')
 
