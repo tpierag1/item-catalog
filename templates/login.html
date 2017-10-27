@@ -74,14 +74,15 @@ function signInCallback(json) {
     $('#signinButton').attr('style', 'display: none');
       $.ajax({
         type: 'POST',
-        url: '/gconnect',
+        url: '/gconnect?state={{ STATE }}',
         processData: false,
         data: authResult['code'],
         contentType: 'application/octet-stream; charset=utf-8',
         success: function(result) {
           // Handle or verify the server response
           if (result) {
-            $('#result').html('Login Successful!</br>'+ result + '')
+            $('#result').html('Login Successful!</br>');
+            window.location.href= "{{ url_for('homepage') }}";
           } else if (authResult['error']) {
             console.log('There was an error: ' + authResult['error']);
           } else {
@@ -92,13 +93,7 @@ function signInCallback(json) {
   }
 }
 </script>
-<a href='#' onclick="signOut();">
-    <p>
-        <button style="pad-left:25%;" type="button" class="btn btn-sm btn-danger">
-        Sign Out
-        </button>
-    </p>
-<a/>
+
 <script>
     var auth2;
 
@@ -117,7 +112,8 @@ function signInCallback(json) {
 
     function signOut() {
         auth2.signOut().then(function() {
-            console.log('User signed out.');
+            console.log('User signed out.')
+            window.location.href="{{ url_for('homepage') }}";
         });
     }
     </script>

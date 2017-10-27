@@ -40,13 +40,6 @@
             <h1 style="text-align:center;">SUPER ULTRA MEGA GROCERIES</h1>
             <br>
         </div>
-        <p style="text-align:right">
-            <a href="{{ url_for('createCategory') }}">
-                <button type="button" class="btn btn-success">
-                    Create Category
-                </button>
-            </a
-        </p>
         <div class="page-header">
             <h1>Departments</h1>
         </div>
@@ -57,19 +50,8 @@
                     {{category.name}}
                 </button>
             </a>
-            <p>
-                <a href='{{url_for('editCategory', category_id = category.id ) }}' >
-  			             <button type="button" class="btn btn-sm btn-primary">
-  				                       Edit
-  			             </button>
-  		        </a>
-  		        <a href='{{url_for('deleteCategory', category_id = category.id ) }}' >
-  			             <button type="button" class="btn btn-sm btn-danger">
-  				                       Delete
-  			             </button>
-                </a>
-            </p>
-            <br>
+
+            <br><br>
 
             {% endfor %}
 
