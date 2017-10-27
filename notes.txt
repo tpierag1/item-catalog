@@ -1,0 +1,14 @@
+Make README
+
+-Google Client API documentation
+-Add Client ID into login.html Here:
+
+    gapi.load('auth2', function() {
+        auth2 = gapi.auth2.init({
+            client_id: '[ADD HERE]',
+            });
+        });
+
+    -Download and add client_secrets.json to pproject directory
+    -Run db_constructor.html
+    -launch using python application.py
