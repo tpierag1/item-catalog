@@ -83,7 +83,7 @@ These instructions have been tested on Ubuntu 16.04
   To do so run the db_constructor.py script<br>
   `python db_constructor.py`
   
-  Start Redis
+  Start Redis<br>
   `redis-server`
   
   Open a new Terminal tab and run the application<br>
