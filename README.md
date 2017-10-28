@@ -66,25 +66,27 @@ These instructions have been tested on Ubuntu 16.04
  - Download and rename the file client_secrets.json
  - Move the file to the project directory
  - Copy the Client ID from the Google project panel
- - Paste the ID into the templates/login.html file here:
-  `<script>
+ - Paste the ID into the templates/login.html file here:<br>
+  ```
+  <script>
         gapi.load('auth2', function() {
             auth2 = gapi.auth2.init({
                 client_id: '[ADD CLIENT_ID HERE]',
                 });
             });
-   </script>`
+   </script>
+   ```
   
   ## Running Application
   
   To run the application the database needs to be populated.
-  To do so run the db_constructor.py script
+  To do so run the db_constructor.py script<br>
   `python db_constructor.py`
   
   Start Redis
   `redis-server`
   
-  Open a new Terminal tab and run the application
+  Open a new Terminal tab and run the application<br>
   `python application.py`
   
   To access the application go to http://localhost:8000
